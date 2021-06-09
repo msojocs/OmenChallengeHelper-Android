@@ -117,8 +117,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
+                    resultArea.setText("操作结果：");
+                    loadingProgressBar.setVisibility(View.VISIBLE);
+
+                    App app = new App(usernameEditText.getText().toString(),
                             passwordEditText.getText().toString());
+                    app.setResultArea(resultArea);
+                    app.setLoadingProgressBar(loadingProgressBar);
+                    app.start();
                 }
                 return false;
             }
