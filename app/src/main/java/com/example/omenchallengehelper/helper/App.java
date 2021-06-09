@@ -1,13 +1,17 @@
 package com.example.omenchallengehelper.helper;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.TintContextWrapper;
+
 import com.example.omenchallengehelper.helper.Omen.Challenge;
 import com.example.omenchallengehelper.helper.Omen.Login;
 import com.example.omenchallengehelper.helper.Utils.JsonUtil;
+import com.example.omenchallengehelper.ui.login.LoginActivity;
 
 import org.apache.hc.core5.http.ParseException;
 
@@ -40,11 +44,7 @@ public class App extends Thread
         String sessionToken;
         Login login = new Login();
         appendMsg("登录准备");
-        boolean p = login.webPrepare();
-        if(!p) {
-            appendMsg("失败！");
-            return;
-        }
+        login.webPrepare();
 
         login.setEmail(email);
         appendMsg("开始账号检查");
@@ -114,30 +114,55 @@ public class App extends Thread
         try{
             runSub();
         }catch (Exception e){
-            appendMsg(e.getMessage());
+            String msg;
+            if(e instanceof RuntimeException) {
+                StackTraceElement traceElement = e.getStackTrace()[0];
+                msg = e.getMessage() + "\n异常来源：" +traceElement.getClassName() + " - line:" + traceElement.getLineNumber();
+            }else{
+                msg = e.getMessage();
+            }
+            appendMsg(msg);
         }finally {
             stopLoading();
         }
     }
 
     public void appendMsg(String msg){
-        Activity activity = (Activity) resultArea.getContext();
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                resultArea.append("\n" + msg);
-            }
-        });
+        Context context = resultArea.getContext();
+
+        Activity activity = null;
+        if(context instanceof LoginActivity) {
+            activity = (Activity) context;
+        }else if(context instanceof TintContextWrapper){
+            activity = (Activity)((TintContextWrapper) context).getBaseContext();
+        }
+        if(activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    resultArea.append("\n" + msg);
+                }
+            });
     }
 
     public void stopLoading(){
+        Context context = resultArea.getContext();
+        // 4.4 TintContextWrapper
+        // 5.1 LoginActivity
 
-        Activity activity = (Activity) resultArea.getContext();
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                loadingProgressBar.setVisibility(View.INVISIBLE);
-            }
-        });
+        Activity activity = null;
+        if(context instanceof LoginActivity) {
+            activity = (Activity) context;
+        }else if(context instanceof TintContextWrapper){
+            activity = (Activity)((TintContextWrapper) context).getBaseContext();
+        }
+
+        if(activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadingProgressBar.setVisibility(View.INVISIBLE);
+                }
+            });
     }
 }
