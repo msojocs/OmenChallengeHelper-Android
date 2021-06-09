@@ -11,7 +11,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "0.0.3"
+        versionName "0.0.4"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -53,4 +53,5 @@ dependencies {
     api 'com.github.ok2c.hc5.android:httpclient-android:0.1.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
     implementation 'com.android.support:multidex:1.0.3'
+//    implementation 'ch.qos.logback:logback-classic:1.2.3'
 }

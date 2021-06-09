@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+//        loginButton.setEnabled(true);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -223,7 +223,7 @@ public class HttpUtil2 {
             String url,
             Map<String, String> params,
             Map<String, String> headers,
-            String charset) throws IOException {
+            String charset) throws IOException, ParseException {
         CloseableHttpResponse httpResponse = doGet(url, params, headers, charset);
         HttpEntity entity = httpResponse.getEntity();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -241,7 +241,7 @@ public class HttpUtil2 {
             Map<String, String> params,
             Map<String, String> headers,
             String charset
-    ) {
+    ) throws IOException, ParseException {
         return doGet(url, params, headers, charset, localContext);
     }
     /**
@@ -259,7 +259,7 @@ public class HttpUtil2 {
             Map<String, String> headers,
             String charset,
             HttpClientContext context
-    ) {
+    ) throws IOException, ParseException {
         try {
             UrlEncodedFormEntity urlEncodedFormEntity = genFormEntity(params, charset);
 
@@ -276,9 +276,8 @@ public class HttpUtil2 {
                 // 处理"达到最大重定向异常"
                 return (CloseableHttpResponse) context.getResponse();
             }
-            e.printStackTrace();
+            throw e;
         }
-        return null;
     }
 
     /***
@@ -425,7 +424,7 @@ public class HttpUtil2 {
             Map<String, String> headers,
             String charset,
             HttpClientContext context
-    ){
+    ) throws IOException {
 
         HttpPost httpPost = new HttpPost(url);
         // 添加请求头
@@ -444,9 +443,8 @@ public class HttpUtil2 {
                 // 处理"达到最大重定向异常"
                 return (CloseableHttpResponse) context.getResponse();
             }
-            e.printStackTrace();
+            throw e;
         }
-        return null;
     }
 
     /***
