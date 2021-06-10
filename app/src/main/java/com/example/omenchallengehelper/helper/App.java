@@ -94,7 +94,11 @@ public class App extends Thread
             Map<String, Object> en = eventList.get(i);
             appendMsg("当前执行任务：" + en.get("eventName") + " - " + en.get("progress") + "%");
             int time = 45;
-            time += Math.random() * 20;
+            if(((String) en.get("eventName")).startsWith("Launch")){
+                time = 1;
+            }else {
+                time += Math.random() * 20;
+            }
             Map<String, Object> result = challenge.doIt((String) en.get("eventName"), time);
             if(result == null){
                 appendMsg("失败！");
