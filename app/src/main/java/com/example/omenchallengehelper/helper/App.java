@@ -96,8 +96,6 @@ public class App extends Thread
             int time = 45;
             if(((String) en.get("eventName")).startsWith("Launch")){
                 time = 1;
-            }else {
-                time += Math.random() * 20;
             }
             Map<String, Object> result = challenge.doIt((String) en.get("eventName"), time);
             if(result == null){
