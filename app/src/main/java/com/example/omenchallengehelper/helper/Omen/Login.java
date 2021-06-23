@@ -32,6 +32,7 @@ public class Login {
 
     HttpUtil2 httpUtil2 = new HttpUtil2();
     private String backendCsrf;
+    private String baseUrl;
 
     public Login() {
     }
@@ -60,12 +61,13 @@ public class Login {
         HttpUtilEntity temp = httpUtil2.doStreamPost(backendUrl, JsonUtil.obj2String(body).getBytes(StandardCharsets.UTF_8), header);
         Map result = JsonUtil.string2Obj(temp.getBody(), Map.class);
         backendCsrf = (String) result.get("csrfToken");
+        baseUrl = (String) result.get("regionEndpointUrl");
 
         return true;
     }
 
     public String idpProvider(){
-        String url = "https://ui-backend.us-west-2.id.hp.com/bff/v1/session/check-username";
+        String url = baseUrl + "/session/check-username";
         Map<String, String> data = new HashMap<String, String>(){{
             put("username", email);
         }};
@@ -94,7 +96,7 @@ public class Login {
     }
     public String webLogin(){
 
-        String loginAddr = "https://ui-backend.us-west-2.id.hp.com/bff/v1/session/username-password";
+        String loginAddr = baseUrl + "/session/username-password";
         Map<String, String> data = new HashMap<String, String>(){{
             put("username", email + "@" + idpProvider);
             put("password", pass);
